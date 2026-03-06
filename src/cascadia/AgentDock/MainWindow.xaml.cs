@@ -45,16 +45,16 @@ public partial class MainWindow : Window
     {
         return new TerminalTheme
         {
-            DefaultBackground = 0x1E1720,
-            DefaultForeground = 0xE5E7EB,
-            DefaultSelectionBackground = 0x8B9CF0,
-            CursorStyle = CursorStyle.SteadyBar,
+            DefaultBackground = 0x050505,
+            DefaultForeground = 0xB8B8B8,
+            DefaultSelectionBackground = 0x4A4A4A,
+            CursorStyle = CursorStyle.BlinkingBlock,
             ColorTable =
             [
-                0x1E1720, 0x5B34DA, 0x0EA56B, 0xB45309,
-                0xDD6B20, 0xC026D3, 0xD97706, 0xD1D5DB,
-                0x6B7280, 0x7C63F2, 0x34D399, 0xF59E0B,
-                0xFB923C, 0xE879F9, 0xFCD34D, 0xF9FAFB,
+                0x050505, 0x7A3B3B, 0x4D8A66, 0x8A6A2A,
+                0x965A2C, 0x7C4A8D, 0x5E7F7F, 0xB8B8B8,
+                0x4D4D4D, 0xB85C5C, 0x67B789, 0xC99A3B,
+                0xC97D45, 0xA66ABD, 0x7CAAAA, 0xE8E8E8,
             ],
         };
     }

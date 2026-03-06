@@ -5,62 +5,385 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:term="clr-namespace:Microsoft.Terminal.Wpf;assembly=Microsoft.Terminal.Wpf"
         Title="AgentDock"
-        Width="960"
-        Height="640"
-        MinWidth="640"
-        MinHeight="420"
-        Background="#111827"
+        Width="1360"
+        Height="860"
+        MinWidth="980"
+        MinHeight="620"
+        Background="#050505"
         WindowStartupLocation="CenterScreen"
+        UseLayoutRounding="True"
         mc:Ignorable="d">
-    <Grid>
+    <Window.Resources>
+        <SolidColorBrush x:Key="WindowBrush" Color="#050505" />
+        <SolidColorBrush x:Key="CardBrush" Color="#0A0A0A" />
+        <SolidColorBrush x:Key="HeaderBrush" Color="#0F0F0F" />
+        <SolidColorBrush x:Key="BorderBrushSubtle" Color="#191919" />
+        <SolidColorBrush x:Key="BorderBrushHover" Color="#2A2A2A" />
+        <SolidColorBrush x:Key="TextBrush" Color="#B8B8B8" />
+        <SolidColorBrush x:Key="MutedBrush" Color="#7A7A7A" />
+        <SolidColorBrush x:Key="SoftBrush" Color="#585858" />
+        <SolidColorBrush x:Key="RunningBrush" Color="#56C98E" />
+        <SolidColorBrush x:Key="IdleBrush" Color="#666666" />
+        <SolidColorBrush x:Key="AttentionBrush" Color="#C9912C" />
+        <LinearGradientBrush x:Key="FadeBrush" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#00000000" Offset="0" />
+            <GradientStop Color="#0A0A0A" Offset="1" />
+        </LinearGradientBrush>
+
+        <Style x:Key="TerminalCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CardBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrushSubtle}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="22" />
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="18" ShadowDepth="0" Color="#000000" Opacity="0.34" />
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="{StaticResource BorderBrushHover}" />
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect BlurRadius="28" ShadowDepth="0" Color="#000000" Opacity="0.5" />
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="AttentionCardStyle" TargetType="Border" BasedOn="{StaticResource TerminalCardStyle}">
+            <Setter Property="BorderBrush" Value="#4A3820" />
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="24" ShadowDepth="0" Color="#C9912C" Opacity="0.22" />
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="#73531F" />
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect BlurRadius="32" ShadowDepth="0" Color="#D59A31" Opacity="0.3" />
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="PreviewTextStyle" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Cascadia Code" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+            <Setter Property="LineHeight" Value="20" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+
+        <Style x:Key="HeaderButtonStyle" TargetType="ToggleButton">
+            <Setter Property="Background" Value="#101010" />
+            <Setter Property="BorderBrush" Value="#1E1E1E" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="16,10" />
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Content" Value="OVERVIEW MODE" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="16"
+                                Padding="{TemplateBinding Padding}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" />
+                                <TextBlock Margin="10,0,0,0" Text="↔" Foreground="{StaticResource MutedBrush}" />
+                            </StackPanel>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="Content" Value="FOCUSED MODE" />
+                    <Setter Property="Background" Value="#141414" />
+                    <Setter Property="BorderBrush" Value="#2A2A2A" />
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#161616" />
+                    <Setter Property="BorderBrush" Value="#303030" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="24" Background="{StaticResource WindowBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Border Grid.Row="0"
-                Padding="16,12"
-                Background="#111827"
-                BorderBrush="#2A3550"
-                BorderThickness="0,0,0,1">
+                Background="{StaticResource CardBrush}"
+                BorderBrush="{StaticResource BorderBrushSubtle}"
+                BorderThickness="1"
+                CornerRadius="22"
+                Padding="16">
             <Grid>
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Orientation="Vertical">
-                    <TextBlock Text="AgentDock"
-                               FontSize="18"
-                               FontWeight="SemiBold"
-                               Foreground="#F3F4F6" />
-                    <TextBlock Text="Minimal WPF host for the terminal control"
-                               Margin="0,2,0,0"
-                               FontSize="12"
-                               Foreground="#9CA3AF" />
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Ellipse Width="10" Height="10" Fill="#C45B5B" />
+                    <Ellipse Width="10" Height="10" Margin="8,0,0,0" Fill="#B78D39" />
+                    <Ellipse Width="10" Height="10" Margin="8,0,0,0" Fill="#4E8E68" />
                 </StackPanel>
 
                 <Border Grid.Column="1"
-                        Padding="10,4"
-                        Background="#1D4ED8"
-                        VerticalAlignment="Center"
-                        CornerRadius="999">
-                    <TextBlock x:Name="SessionLabel"
-                               Text="PowerShell"
-                               FontSize="12"
-                               FontWeight="SemiBold"
-                               Foreground="White" />
+                        Width="34"
+                        Height="34"
+                        Margin="16,0,12,0"
+                        Background="#101010"
+                        BorderBrush="{StaticResource BorderBrushSubtle}"
+                        BorderThickness="1"
+                        CornerRadius="12">
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Cascadia Code" FontSize="12" Foreground="{StaticResource TextBrush}" Text=">_" />
                 </Border>
+
+                <TextBlock Grid.Column="2" VerticalAlignment="Center" FontSize="18" FontWeight="SemiBold" Foreground="#E7E7E7" Text="AgentDock" />
+
+                <ToggleButton x:Name="ViewModeToggle" Grid.Column="3" Style="{StaticResource HeaderButtonStyle}" />
             </Grid>
         </Border>
 
-        <Border Grid.Row="1"
-                Margin="12,12,12,12"
-                BorderBrush="#2A3550"
-                BorderThickness="1"
-                Background="#0F172A">
-            <term:TerminalControl x:Name="Terminal"
-                                  Focusable="True" />
-        </Border>
+        <Grid Grid.Row="2">
+            <Grid x:Name="FocusedModePanel">
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Setter Property="Visibility" Value="Visible" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsChecked, ElementName=ViewModeToggle}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="300" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Style="{StaticResource TerminalCardStyle}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Border Background="{StaticResource HeaderBrush}" BorderBrush="{StaticResource BorderBrushSubtle}" BorderThickness="0,0,0,1" CornerRadius="22,22,0,0" Padding="16,14">
+                            <TextBlock Foreground="{StaticResource MutedBrush}" FontSize="11" FontWeight="SemiBold" Text="BACKGROUND SESSIONS" />
+                        </Border>
+                        <StackPanel Grid.Row="1" Margin="12">
+                            <Border Style="{StaticResource TerminalCardStyle}" Margin="0,0,0,12">
+                                <Grid>
+                                    <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+                                    <Border Background="{StaticResource HeaderBrush}" BorderBrush="{StaticResource BorderBrushSubtle}" BorderThickness="0,0,0,1" CornerRadius="18,18,0,0" Padding="12,10">
+                                        <DockPanel>
+                                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                                                <Ellipse Width="8" Height="8" Fill="{StaticResource RunningBrush}" />
+                                                <TextBlock Margin="10,0,0,0" Foreground="{StaticResource TextBrush}" FontSize="13" FontWeight="SemiBold" Text="build-monitor" />
+                                            </StackPanel>
+                                            <TextBlock DockPanel.Dock="Right" Foreground="{StaticResource SoftBrush}" FontFamily="Cascadia Code" FontSize="11" Text="tail -f" />
+                                        </DockPanel>
+                                    </Border>
+                                    <Grid Grid.Row="1" Height="132" Margin="12,10,12,12" ClipToBounds="True">
+                                        <TextBlock Style="{StaticResource PreviewTextStyle}" Opacity="0.56" Text="[05:43:11] build ok&#10;[05:43:14] artifacts indexed&#10;[05:43:20] smoke checks queued&#10;[05:43:21] idle waiting..." />
+                                        <Rectangle VerticalAlignment="Bottom" Height="44" Fill="{StaticResource FadeBrush}" />
+                                    </Grid>
+                                </Grid>
+                            </Border>
+
+                            <Border Style="{StaticResource AttentionCardStyle}" Margin="0,0,0,12">
+                                <Grid>
+                                    <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+                                    <Border Background="{StaticResource HeaderBrush}" BorderBrush="{StaticResource BorderBrushSubtle}" BorderThickness="0,0,0,1" CornerRadius="18,18,0,0" Padding="12,10">
+                                        <DockPanel>
+                                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                                                <Ellipse Width="8" Height="8" Fill="{StaticResource AttentionBrush}" />
+                                                <TextBlock Margin="10,0,0,0" Foreground="{StaticResource TextBrush}" FontSize="13" FontWeight="SemiBold" Text="review-queue" />
+                                            </StackPanel>
+                                            <TextBlock DockPanel.Dock="Right" Foreground="{StaticResource AttentionBrush}" FontFamily="Cascadia Code" FontSize="11" Text="attention" />
+                                        </DockPanel>
+                                    </Border>
+                                    <Grid Grid.Row="1" Height="132" Margin="12,10,12,12" ClipToBounds="True">
+                                        <TextBlock Style="{StaticResource PreviewTextStyle}" Opacity="0.54" Text="agent@dock: 3 sessions require review&#10;warning: stalled input on pane 02&#10;hint: return to overview to inspect" />
+                                        <Rectangle VerticalAlignment="Bottom" Height="44" Fill="{StaticResource FadeBrush}" />
+                                    </Grid>
+                                </Grid>
+                            </Border>
+
+                            <Border Style="{StaticResource TerminalCardStyle}">
+                                <Grid>
+                                    <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+                                    <Border Background="{StaticResource HeaderBrush}" BorderBrush="{StaticResource BorderBrushSubtle}" BorderThickness="0,0,0,1" CornerRadius="18,18,0,0" Padding="12,10">
+                                        <DockPanel>
+                                            <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                                                <Ellipse Width="8" Height="8" Fill="{StaticResource IdleBrush}" />
+                                                <TextBlock Margin="10,0,0,0" Foreground="{StaticResource TextBrush}" FontSize="13" FontWeight="SemiBold" Text="sync-cache" />
+                                            </StackPanel>
+                                            <TextBlock DockPanel.Dock="Right" Foreground="{StaticResource SoftBrush}" FontFamily="Cascadia Code" FontSize="11" Text="sleep" />
+                                        </DockPanel>
+                                    </Border>
+                                    <Grid Grid.Row="1" Height="132" Margin="12,10,12,12" ClipToBounds="True">
+                                        <TextBlock Style="{StaticResource PreviewTextStyle}" Opacity="0.48" Text="cache warm-up complete&#10;metadata snapshots persisted&#10;next poll in 00:09:57" />
+                                        <Rectangle VerticalAlignment="Bottom" Height="44" Fill="{StaticResource FadeBrush}" />
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Column="2" Style="{StaticResource TerminalCardStyle}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Border Background="{StaticResource HeaderBrush}" BorderBrush="{StaticResource BorderBrushSubtle}" BorderThickness="0,0,0,1" CornerRadius="22,22,0,0" Padding="16,14">
+                            <Grid>
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <Ellipse Width="9" Height="9" Fill="{StaticResource RunningBrush}" />
+                                    <TextBlock x:Name="SessionLabel" Margin="10,0,0,0" VerticalAlignment="Center" Foreground="#E5E5E5" FontSize="14" FontWeight="SemiBold" Text="PowerShell" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                    <Border Padding="10,4" Background="#111111" BorderBrush="#1F1F1F" BorderThickness="1" CornerRadius="12">
+                                        <TextBlock Foreground="{StaticResource TextBrush}" FontSize="11" FontWeight="SemiBold" Text="ACTIVE" />
+                                    </Border>
+                                    <Border Margin="8,0,0,0" Padding="10,4" Background="#111111" BorderBrush="#1F1F1F" BorderThickness="1" CornerRadius="12">
+                                        <TextBlock Foreground="{StaticResource MutedBrush}" FontFamily="Cascadia Code" FontSize="11" Text="pty" />
+                                    </Border>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <Grid Grid.Row="1" Margin="16">
+                            <Grid.RowDefinitions><RowDefinition Height="*" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+                            <Border Grid.Row="0" Background="{StaticResource WindowBrush}" BorderBrush="#121212" BorderThickness="1" CornerRadius="18">
+                                <Grid Margin="14">
+                                    <term:TerminalControl x:Name="Terminal" Focusable="True" />
+                                </Grid>
+                            </Border>
+                            <DockPanel Grid.Row="1" Margin="2,12,2,0">
+                                <TextBlock DockPanel.Dock="Left" Foreground="{StaticResource SoftBrush}" FontSize="12" Text="scrollable live output" />
+                                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                                    <TextBlock Foreground="#D0D0D0" FontFamily="Cascadia Code" FontSize="13" Text="█" />
+                                    <TextBlock Margin="8,0,0,0" Foreground="{StaticResource MutedBrush}" FontSize="12" Text="running" />
+                                </StackPanel>
+                            </DockPanel>
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <Grid x:Name="OverviewModePanel">
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsChecked, ElementName=ViewModeToggle}" Value="True">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Grid.RowDefinitions><RowDefinition Height="*" /><RowDefinition Height="20" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="20" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+
+                <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource TerminalCardStyle}">
+                    <Grid>
+                        <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+                        <Border Background="{StaticResource HeaderBrush}" BorderBrush="{StaticResource BorderBrushSubtle}" BorderThickness="0,0,0,1" CornerRadius="22,22,0,0" Padding="16,14">
+                            <DockPanel>
+                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                                    <Ellipse Width="9" Height="9" Fill="{StaticResource RunningBrush}" />
+                                    <TextBlock Margin="10,0,0,0" Foreground="#E5E5E5" FontSize="14" FontWeight="SemiBold" Text="powershell.exe" />
+                                </StackPanel>
+                                <TextBlock DockPanel.Dock="Right" Foreground="{StaticResource SoftBrush}" FontFamily="Cascadia Code" FontSize="11" Text="selected" />
+                            </DockPanel>
+                        </Border>
+                        <Grid Grid.Row="1" Margin="16" ClipToBounds="True">
+                            <TextBlock Style="{StaticResource PreviewTextStyle}" Opacity="0.88" Text="PS C:\repo\GitHub\terminal&gt; msbuild AgentDock.csproj&#10;Build started 05:43:26&#10;Restoring cached inputs...&#10;Launching focused shell session █" />
+                            <Rectangle VerticalAlignment="Bottom" Height="56" Fill="{StaticResource FadeBrush}" />
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource AttentionCardStyle}">
+                    <Grid>
+                        <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+                        <Border Background="{StaticResource HeaderBrush}" BorderBrush="{StaticResource BorderBrushSubtle}" BorderThickness="0,0,0,1" CornerRadius="22,22,0,0" Padding="16,14">
+                            <DockPanel>
+                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                                    <Ellipse Width="9" Height="9" Fill="{StaticResource AttentionBrush}" />
+                                    <TextBlock Margin="10,0,0,0" Foreground="#E5E5E5" FontSize="14" FontWeight="SemiBold" Text="review-queue" />
+                                </StackPanel>
+                                <TextBlock DockPanel.Dock="Right" Foreground="{StaticResource AttentionBrush}" FontFamily="Cascadia Code" FontSize="11" Text="attention" />
+                            </DockPanel>
+                        </Border>
+                        <Grid Grid.Row="1" Margin="16" ClipToBounds="True">
+                            <TextBlock Style="{StaticResource PreviewTextStyle}" Opacity="0.68" Text="queue&gt; diff pending for 3 files&#10;queue&gt; await manual inspection&#10;queue&gt; amber state propagated" />
+                            <Rectangle VerticalAlignment="Bottom" Height="56" Fill="{StaticResource FadeBrush}" />
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="2" Grid.Column="0" Style="{StaticResource TerminalCardStyle}">
+                    <Grid>
+                        <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+                        <Border Background="{StaticResource HeaderBrush}" BorderBrush="{StaticResource BorderBrushSubtle}" BorderThickness="0,0,0,1" CornerRadius="22,22,0,0" Padding="16,14">
+                            <DockPanel>
+                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                                    <Ellipse Width="9" Height="9" Fill="{StaticResource IdleBrush}" />
+                                    <TextBlock Margin="10,0,0,0" Foreground="#E5E5E5" FontSize="14" FontWeight="SemiBold" Text="sync-cache" />
+                                </StackPanel>
+                                <TextBlock DockPanel.Dock="Right" Foreground="{StaticResource SoftBrush}" FontFamily="Cascadia Code" FontSize="11" Text="background" />
+                            </DockPanel>
+                        </Border>
+                        <Grid Grid.Row="1" Margin="16" ClipToBounds="True">
+                            <TextBlock Style="{StaticResource PreviewTextStyle}" Opacity="0.54" Text="snapshot complete&#10;updating local package graph&#10;next wake in 00:09:57" />
+                            <Rectangle VerticalAlignment="Bottom" Height="56" Fill="{StaticResource FadeBrush}" />
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="2" Grid.Column="2" Style="{StaticResource TerminalCardStyle}">
+                    <Grid>
+                        <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="*" /></Grid.RowDefinitions>
+                        <Border Background="{StaticResource HeaderBrush}" BorderBrush="{StaticResource BorderBrushSubtle}" BorderThickness="0,0,0,1" CornerRadius="22,22,0,0" Padding="16,14">
+                            <DockPanel>
+                                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                                    <Ellipse Width="9" Height="9" Fill="{StaticResource RunningBrush}" />
+                                    <TextBlock Margin="10,0,0,0" Foreground="#E5E5E5" FontSize="14" FontWeight="SemiBold" Text="build-monitor" />
+                                </StackPanel>
+                                <TextBlock DockPanel.Dock="Right" Foreground="{StaticResource SoftBrush}" FontFamily="Cascadia Code" FontSize="11" Text="tail" />
+                            </DockPanel>
+                        </Border>
+                        <Grid Grid.Row="1" Margin="16" ClipToBounds="True">
+                            <TextBlock Style="{StaticResource PreviewTextStyle}" Opacity="0.62" Text="[watch] renderer atlas ready&#10;[watch] terminal core ready&#10;[watch] awaiting user input" />
+                            <Rectangle VerticalAlignment="Bottom" Height="56" Fill="{StaticResource FadeBrush}" />
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>
