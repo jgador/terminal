@@ -18,6 +18,7 @@ internal sealed class ConptyConnection : ITerminalConnection, IDisposable
     private const uint Infinite = 0xFFFFFFFF;
 
     private readonly string _commandLine;
+    private readonly string _workingDirectory;
     private readonly object _sync = new();
     private readonly CancellationTokenSource _shutdown = new();
 
@@ -31,9 +32,10 @@ internal sealed class ConptyConnection : ITerminalConnection, IDisposable
     private StreamWriter _inputWriter;
     private FileStream _outputStream;
 
-    public ConptyConnection(string commandLine)
+    public ConptyConnection(string commandLine, string workingDirectory)
     {
         _commandLine = commandLine;
+        _workingDirectory = workingDirectory;
     }
 
     public event EventHandler<TerminalOutputEventArgs> TerminalOutput;
@@ -70,7 +72,7 @@ internal sealed class ConptyConnection : ITerminalConnection, IDisposable
                 "Could not create pseudo console.");
 
             STARTUPINFOEX startupInfo = ConfigureStartupInfo(pseudoConsole, out attributeList);
-            processInfo = StartProcess(ref startupInfo, _commandLine);
+            processInfo = StartProcess(ref startupInfo, _commandLine, _workingDirectory);
 
             NativeMethods.DeleteProcThreadAttributeList(attributeList);
             Marshal.FreeHGlobal(attributeList);
@@ -325,7 +327,7 @@ internal sealed class ConptyConnection : ITerminalConnection, IDisposable
         return startupInfo;
     }
 
-    private static PROCESS_INFORMATION StartProcess(ref STARTUPINFOEX startupInfo, string commandLine)
+    private static PROCESS_INFORMATION StartProcess(ref STARTUPINFOEX startupInfo, string commandLine, string workingDirectory)
     {
         SECURITY_ATTRIBUTES processAttributes = new()
         {
@@ -345,7 +347,7 @@ internal sealed class ConptyConnection : ITerminalConnection, IDisposable
                 false,
                 ExtendedStartupInfoPresent,
                 IntPtr.Zero,
-                null,
+                string.IsNullOrWhiteSpace(workingDirectory) ? null : workingDirectory,
                 ref startupInfo,
                 out PROCESS_INFORMATION processInfo))
         {

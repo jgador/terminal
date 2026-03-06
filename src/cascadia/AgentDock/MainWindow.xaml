@@ -16,30 +16,30 @@
         <SolidColorBrush x:Key="WindowBrush" Color="#050505" />
         <SolidColorBrush x:Key="CardBrush" Color="#0A0A0A" />
         <SolidColorBrush x:Key="HeaderBrush" Color="#0F0F0F" />
-        <SolidColorBrush x:Key="BorderBrushSubtle" Color="#191919" />
+        <SolidColorBrush x:Key="BorderBrushSubtle" Color="#161616" />
         <SolidColorBrush x:Key="BorderBrushHover" Color="#2A2A2A" />
         <SolidColorBrush x:Key="SelectedBorderBrush" Color="#313131" />
         <SolidColorBrush x:Key="TextBrush" Color="#B8B8B8" />
-        <SolidColorBrush x:Key="MutedBrush" Color="#7A7A7A" />
-        <SolidColorBrush x:Key="SoftBrush" Color="#585858" />
+        <SolidColorBrush x:Key="MutedBrush" Color="#767676" />
+        <SolidColorBrush x:Key="SoftBrush" Color="#5B5B5B" />
         <SolidColorBrush x:Key="RunningBrush" Color="#56C98E" />
         <SolidColorBrush x:Key="IdleBrush" Color="#666666" />
         <SolidColorBrush x:Key="AttentionBrush" Color="#C9912C" />
 
         <LinearGradientBrush x:Key="FadeBrush" StartPoint="0,0" EndPoint="0,1">
             <GradientStop Color="#00000000" Offset="0" />
-            <GradientStop Color="#0A0A0A" Offset="1" />
+            <GradientStop Color="#050505" Offset="1" />
         </LinearGradientBrush>
 
         <Style x:Key="TerminalCardStyle" TargetType="Border">
             <Setter Property="Background" Value="{StaticResource CardBrush}" />
             <Setter Property="BorderBrush" Value="{StaticResource BorderBrushSubtle}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="22" />
+            <Setter Property="CornerRadius" Value="24" />
             <Setter Property="SnapsToDevicePixels" Value="True" />
             <Setter Property="Effect">
                 <Setter.Value>
-                    <DropShadowEffect BlurRadius="18"
+                    <DropShadowEffect BlurRadius="20"
                                       ShadowDepth="0"
                                       Color="#000000"
                                       Opacity="0.34" />
@@ -50,7 +50,7 @@
                     <Setter Property="BorderBrush" Value="{StaticResource BorderBrushHover}" />
                     <Setter Property="Effect">
                         <Setter.Value>
-                            <DropShadowEffect BlurRadius="28"
+                            <DropShadowEffect BlurRadius="34"
                                               ShadowDepth="0"
                                               Color="#000000"
                                               Opacity="0.5" />
@@ -64,7 +64,7 @@
             <Setter Property="BorderBrush" Value="{StaticResource SelectedBorderBrush}" />
             <Setter Property="Effect">
                 <Setter.Value>
-                    <DropShadowEffect BlurRadius="30"
+                    <DropShadowEffect BlurRadius="34"
                                       ShadowDepth="0"
                                       Color="#000000"
                                       Opacity="0.58" />
@@ -76,10 +76,10 @@
             <Setter Property="BorderBrush" Value="#4A3820" />
             <Setter Property="Effect">
                 <Setter.Value>
-                    <DropShadowEffect BlurRadius="24"
+                    <DropShadowEffect BlurRadius="26"
                                       ShadowDepth="0"
                                       Color="#C9912C"
-                                      Opacity="0.22" />
+                                      Opacity="0.20" />
                 </Setter.Value>
             </Setter>
             <Style.Triggers>
@@ -87,10 +87,10 @@
                     <Setter Property="BorderBrush" Value="#73531F" />
                     <Setter Property="Effect">
                         <Setter.Value>
-                            <DropShadowEffect BlurRadius="32"
+                            <DropShadowEffect BlurRadius="34"
                                               ShadowDepth="0"
                                               Color="#D59A31"
-                                              Opacity="0.3" />
+                                              Opacity="0.28" />
                         </Setter.Value>
                     </Setter>
                 </Trigger>
@@ -99,67 +99,67 @@
 
         <Style x:Key="TerminalViewportStyle" TargetType="Border">
             <Setter Property="Background" Value="{StaticResource WindowBrush}" />
-            <Setter Property="BorderBrush" Value="#121212" />
+            <Setter Property="BorderBrush" Value="#141414" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="CornerRadius" Value="18" />
-            <Setter Property="Padding" Value="14" />
+            <Setter Property="Padding" Value="0" />
         </Style>
 
         <Style x:Key="PreviewTextStyle" TargetType="TextBlock">
+            <Setter Property="Margin" Value="18,16,18,18" />
             <Setter Property="FontFamily" Value="Cascadia Code" />
             <Setter Property="FontSize" Value="13" />
-            <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+            <Setter Property="Foreground" Value="#8C8C8C" />
             <Setter Property="LineHeight" Value="20" />
-            <Setter Property="TextWrapping" Value="NoWrap" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            <Setter Property="VerticalAlignment" Value="Top" />
         </Style>
 
         <Style x:Key="HeaderActionButtonStyle" TargetType="ToggleButton">
-            <Setter Property="Background" Value="#101010" />
-            <Setter Property="BorderBrush" Value="#1E1E1E" />
+            <Setter Property="Background" Value="#111111" />
+            <Setter Property="BorderBrush" Value="#1A1A1A" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Padding" Value="16,10" />
+            <Setter Property="Padding" Value="18,10" />
             <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
             <Setter Property="FontSize" Value="12" />
             <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Content" Value="OVERVIEW MODE" />
+            <Setter Property="Content" Value="Focus Active" />
             <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="MinWidth" Value="150" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ToggleButton">
-                        <Border Background="{TemplateBinding Background}"
+                        <Border x:Name="Chrome"
+                                Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="16"
-                                Padding="{TemplateBinding Padding}">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{TemplateBinding Content}"
-                                           Foreground="{TemplateBinding Foreground}" />
-                                <TextBlock Margin="10,0,0,0"
-                                           Text="?"
-                                           Foreground="{StaticResource MutedBrush}" />
-                            </StackPanel>
+                                CornerRadius="14">
+                            <ContentPresenter Margin="{TemplateBinding Padding}"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsChecked" Value="True">
-                    <Setter Property="Content" Value="FOCUSED MODE" />
+                    <Setter Property="Content" Value="Back to Overview" />
                     <Setter Property="Background" Value="#141414" />
-                    <Setter Property="BorderBrush" Value="#2A2A2A" />
+                    <Setter Property="BorderBrush" Value="#303030" />
                 </Trigger>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#161616" />
-                    <Setter Property="BorderBrush" Value="#303030" />
+                    <Setter Property="BorderBrush" Value="#2E2E2E" />
                 </Trigger>
             </Style.Triggers>
         </Style>
     </Window.Resources>
 
-    <Grid Margin="24" Background="{StaticResource WindowBrush}">
+    <Grid Margin="18" Background="{StaticResource WindowBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="20" />
+            <RowDefinition Height="24" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -168,7 +168,7 @@
                 BorderBrush="{StaticResource BorderBrushSubtle}"
                 BorderThickness="1"
                 CornerRadius="22"
-                Padding="16">
+                Padding="18,16">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -178,15 +178,15 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <Ellipse Width="10" Height="10" Fill="#C45B5B" />
-                    <Ellipse Width="10" Height="10" Margin="8,0,0,0" Fill="#B78D39" />
-                    <Ellipse Width="10" Height="10" Margin="8,0,0,0" Fill="#4E8E68" />
+                    <Ellipse Width="9" Height="9" Fill="#202020" />
+                    <Ellipse Width="9" Height="9" Margin="7,0,0,0" Fill="#202020" />
+                    <Ellipse Width="9" Height="9" Margin="7,0,0,0" Fill="#202020" />
                 </StackPanel>
 
                 <Border Grid.Column="1"
                         Width="34"
                         Height="34"
-                        Margin="16,0,12,0"
+                        Margin="16,0,14,0"
                         Background="#101010"
                         BorderBrush="{StaticResource BorderBrushSubtle}"
                         BorderThickness="1"
@@ -199,12 +199,16 @@
                                Text=">_" />
                 </Border>
 
-                <TextBlock Grid.Column="2"
-                           VerticalAlignment="Center"
-                           FontSize="18"
-                           FontWeight="SemiBold"
-                           Foreground="#E7E7E7"
-                           Text="AgentDock" />
+                <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                    <TextBlock FontSize="16"
+                               FontWeight="SemiBold"
+                               Foreground="#E7E7E7"
+                               Text="AgentDock" />
+                    <TextBlock Margin="0,3,0,0"
+                               FontSize="11"
+                               Foreground="{StaticResource MutedBrush}"
+                               Text="terminal multiplexer" />
+                </StackPanel>
 
                 <ToggleButton x:Name="ViewModeToggle"
                               Grid.Column="3"
@@ -260,7 +264,7 @@
                             BorderBrush="{StaticResource BorderBrushSubtle}"
                             BorderThickness="0,0,0,1"
                             CornerRadius="22,22,0,0"
-                            Padding="16,14">
+                            Padding="18,14">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -283,7 +287,7 @@
                             <Grid x:Name="SessionHost0" />
                             <Grid x:Name="PreviewPanel0">
                                 <TextBlock x:Name="PreviewText0" Style="{StaticResource PreviewTextStyle}" Text="Starting PowerShell 01..." />
-                                <Rectangle x:Name="SessionFade0" Height="72" VerticalAlignment="Bottom" Fill="{StaticResource FadeBrush}" IsHitTestVisible="False" />
+                                <Rectangle x:Name="SessionFade0" Height="84" VerticalAlignment="Bottom" Fill="{StaticResource FadeBrush}" IsHitTestVisible="False" />
                             </Grid>
                         </Grid>
                     </Border>
@@ -315,7 +319,7 @@
                             BorderBrush="{StaticResource BorderBrushSubtle}"
                             BorderThickness="0,0,0,1"
                             CornerRadius="22,22,0,0"
-                            Padding="16,14">
+                            Padding="18,14">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -338,7 +342,7 @@
                             <Grid x:Name="SessionHost1" />
                             <Grid x:Name="PreviewPanel1">
                                 <TextBlock x:Name="PreviewText1" Style="{StaticResource PreviewTextStyle}" Text="Starting PowerShell 02..." />
-                                <Rectangle x:Name="SessionFade1" Height="72" VerticalAlignment="Bottom" Fill="{StaticResource FadeBrush}" IsHitTestVisible="False" />
+                                <Rectangle x:Name="SessionFade1" Height="84" VerticalAlignment="Bottom" Fill="{StaticResource FadeBrush}" IsHitTestVisible="False" />
                             </Grid>
                         </Grid>
                     </Border>
@@ -370,7 +374,7 @@
                             BorderBrush="{StaticResource BorderBrushSubtle}"
                             BorderThickness="0,0,0,1"
                             CornerRadius="22,22,0,0"
-                            Padding="16,14">
+                            Padding="18,14">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -393,7 +397,7 @@
                             <Grid x:Name="SessionHost2" />
                             <Grid x:Name="PreviewPanel2">
                                 <TextBlock x:Name="PreviewText2" Style="{StaticResource PreviewTextStyle}" Text="Starting PowerShell 03..." />
-                                <Rectangle x:Name="SessionFade2" Height="72" VerticalAlignment="Bottom" Fill="{StaticResource FadeBrush}" IsHitTestVisible="False" />
+                                <Rectangle x:Name="SessionFade2" Height="84" VerticalAlignment="Bottom" Fill="{StaticResource FadeBrush}" IsHitTestVisible="False" />
                             </Grid>
                         </Grid>
                     </Border>
@@ -425,7 +429,7 @@
                             BorderBrush="{StaticResource BorderBrushSubtle}"
                             BorderThickness="0,0,0,1"
                             CornerRadius="22,22,0,0"
-                            Padding="16,14">
+                            Padding="18,14">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -448,7 +452,7 @@
                             <Grid x:Name="SessionHost3" />
                             <Grid x:Name="PreviewPanel3">
                                 <TextBlock x:Name="PreviewText3" Style="{StaticResource PreviewTextStyle}" Text="Starting PowerShell 04..." />
-                                <Rectangle x:Name="SessionFade3" Height="72" VerticalAlignment="Bottom" Fill="{StaticResource FadeBrush}" IsHitTestVisible="False" />
+                                <Rectangle x:Name="SessionFade3" Height="84" VerticalAlignment="Bottom" Fill="{StaticResource FadeBrush}" IsHitTestVisible="False" />
                             </Grid>
                         </Grid>
                     </Border>

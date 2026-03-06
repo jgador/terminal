@@ -22,6 +22,7 @@ public partial class MainWindow : Window
     private readonly Brush _runningBrush;
     private readonly Brush _idleBrush;
     private readonly Brush _attentionBrush;
+    private readonly string _startupDirectory;
 
     private bool _themeApplied;
     private int _selectedSessionIndex;
@@ -31,6 +32,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
+        _startupDirectory = ResolveStartupDirectory();
         _runningBrush = (Brush)FindResource("RunningBrush");
         _idleBrush = (Brush)FindResource("IdleBrush");
         _attentionBrush = (Brush)FindResource("AttentionBrush");
@@ -87,6 +89,13 @@ public partial class MainWindow : Window
             return;
         }
 
+        if (IsOverviewMode)
+        {
+            _selectedSessionIndex = sessionIndex;
+            ViewModeToggle.IsChecked = true;
+            return;
+        }
+
         SelectSession(sessionIndex);
     }
 
@@ -117,7 +126,7 @@ public partial class MainWindow : Window
                 SessionTitle0,
                 SessionBadge0,
                 SessionFooter0,
-                new BufferedTerminalConnection(ShellCommand)),
+                new BufferedTerminalConnection(ShellCommand, _startupDirectory)),
             new TerminalSession(
                 1,
                 "PowerShell 02",
@@ -131,7 +140,7 @@ public partial class MainWindow : Window
                 SessionTitle1,
                 SessionBadge1,
                 SessionFooter1,
-                new BufferedTerminalConnection(ShellCommand)),
+                new BufferedTerminalConnection(ShellCommand, _startupDirectory)),
             new TerminalSession(
                 2,
                 "PowerShell 03",
@@ -145,7 +154,7 @@ public partial class MainWindow : Window
                 SessionTitle2,
                 SessionBadge2,
                 SessionFooter2,
-                new BufferedTerminalConnection(ShellCommand)),
+                new BufferedTerminalConnection(ShellCommand, _startupDirectory)),
             new TerminalSession(
                 3,
                 "PowerShell 04",
@@ -159,7 +168,7 @@ public partial class MainWindow : Window
                 SessionTitle3,
                 SessionBadge3,
                 SessionFooter3,
-                new BufferedTerminalConnection(ShellCommand)),
+                new BufferedTerminalConnection(ShellCommand, _startupDirectory)),
         ];
     }
 
@@ -199,6 +208,10 @@ public partial class MainWindow : Window
 
     private void ApplyLayout()
     {
+        ViewModeToggle.ToolTip = IsOverviewMode
+            ? $"Open {_sessions[_selectedSessionIndex].Title}"
+            : "Return to the 2-column overview";
+
         if (IsOverviewMode)
         {
             ApplyOverviewLayout();
@@ -216,11 +229,11 @@ public partial class MainWindow : Window
         SidebarHeader.Visibility = Visibility.Collapsed;
 
         SurfaceColumn0.Width = new GridLength(1, GridUnitType.Star);
-        SurfaceColumnGap.Width = new GridLength(20);
+        SurfaceColumnGap.Width = new GridLength(24);
         SurfaceColumn1.Width = new GridLength(1, GridUnitType.Star);
 
         SurfaceRow0.Height = new GridLength(1, GridUnitType.Star);
-        SurfaceGap0.Height = new GridLength(20);
+        SurfaceGap0.Height = new GridLength(24);
         SurfaceRow1.Height = new GridLength(0);
         SurfaceGap1.Height = new GridLength(0);
         SurfaceRow2.Height = new GridLength(1, GridUnitType.Star);
@@ -237,16 +250,16 @@ public partial class MainWindow : Window
     {
         SidebarHeader.Visibility = Visibility.Visible;
 
-        SurfaceColumn0.Width = new GridLength(300);
-        SurfaceColumnGap.Width = new GridLength(20);
+        SurfaceColumn0.Width = new GridLength(292);
+        SurfaceColumnGap.Width = new GridLength(24);
         SurfaceColumn1.Width = new GridLength(1, GridUnitType.Star);
 
         SurfaceRow0.Height = GridLength.Auto;
-        SurfaceGap0.Height = new GridLength(12);
+        SurfaceGap0.Height = new GridLength(14);
         SurfaceRow1.Height = new GridLength(1, GridUnitType.Star);
-        SurfaceGap1.Height = new GridLength(12);
+        SurfaceGap1.Height = new GridLength(14);
         SurfaceRow2.Height = new GridLength(1, GridUnitType.Star);
-        SurfaceGap2.Height = new GridLength(12);
+        SurfaceGap2.Height = new GridLength(14);
         SurfaceRow3.Height = new GridLength(1, GridUnitType.Star);
 
         TerminalSession selected = _sessions[_selectedSessionIndex];
@@ -372,6 +385,23 @@ public partial class MainWindow : Window
         _ = Dispatcher.InvokeAsync(() => _activeTerminal.Focus(), DispatcherPriority.Background);
     }
 
+    private static string ResolveStartupDirectory()
+    {
+        string userProfile = Environment.GetEnvironmentVariable("USERPROFILE");
+        if (!string.IsNullOrWhiteSpace(userProfile))
+        {
+            return userProfile;
+        }
+
+        string fallbackProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        if (!string.IsNullOrWhiteSpace(fallbackProfile))
+        {
+            return fallbackProfile;
+        }
+
+        return Environment.CurrentDirectory;
+    }
+
     private static TerminalTheme CreateTheme()
     {
         return new TerminalTheme
@@ -457,9 +487,9 @@ public partial class MainWindow : Window
         private bool _replaying;
         private int _rawCharCount;
 
-        public BufferedTerminalConnection(string commandLine)
+        public BufferedTerminalConnection(string commandLine, string workingDirectory)
         {
-            _backend = new ConptyConnection(commandLine);
+            _backend = new ConptyConnection(commandLine, workingDirectory);
             _backend.TerminalOutput += Backend_TerminalOutput;
         }
 
