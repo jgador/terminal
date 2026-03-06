@@ -792,6 +792,28 @@
     </Project>
   </Folder>
   <Folder Name="/Terminal/wpf/">
+    <Project Path="src/cascadia/AgentDock/AgentDock.csproj">
+      <BuildDependency Project="src/cascadia/TerminalControl/dll/TerminalControl.vcxproj" />
+      <BuildDependency Project="src/winconpty/dll/winconptydll.vcxproj" />
+      <BuildType Solution="AuditMode|*" Project="Debug" />
+      <BuildType Solution="Fuzzing|Any CPU" Project="Debug" />
+      <BuildType Solution="Fuzzing|x64" Project="Debug" />
+      <Platform Solution="Debug|ARM64" Project="ARM64" />
+      <Platform Solution="Debug|x64" Project="x64" />
+      <Platform Solution="Debug|x86" Project="x86" />
+      <Platform Solution="Fuzzing|x64" Project="x64" />
+      <Platform Solution="Fuzzing|x86" Project="x86" />
+      <Platform Solution="Release|ARM64" Project="ARM64" />
+      <Platform Solution="Release|x64" Project="x64" />
+      <Platform Solution="Release|x86" Project="x86" />
+      <Build Solution="*|Any CPU" Project="false" />
+      <Build Solution="AuditMode|ARM64" Project="false" />
+      <Build Solution="AuditMode|x64" Project="false" />
+      <Build Solution="AuditMode|x86" Project="false" />
+      <Build Solution="Fuzzing|ARM64" Project="false" />
+      <Build Solution="Fuzzing|x64" Project="false" />
+      <Build Solution="Fuzzing|x86" Project="false" />
+    </Project>
     <Project Path="src/cascadia/WpfTerminalControl/WpfTerminalControl.csproj">
       <BuildType Solution="AuditMode|Any CPU" Project="Release" />
       <BuildType Solution="AuditMode|ARM64" Project="Debug" />
